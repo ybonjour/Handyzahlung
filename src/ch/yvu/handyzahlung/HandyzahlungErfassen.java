@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -180,17 +181,14 @@ public class HandyzahlungErfassen extends Activity{
 			int idx = cursor.getColumnIndex(Empfaenger._ID);
 			return cursor.getInt(idx);
 		}
-		
+
 		//Beschreibung falls möglich bestimmen
 		String strBeschreibung = "";
-		Uri uriContacts = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(strEmpfaenger));
-		String[] projectionContacts = new String[] {ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.DISPLAY_NAME};
-		Cursor cursorContacts = managedQuery(uriContacts, projectionContacts, null, null, null);		
-		if(cursorContacts.getCount() == 1)
+		Cursor cPhone = managedQuery(Phone.CONTENT_URI, null, Phone.NUMBER + "= ? AND " + Phone.TYPE + "=" + Phone.TYPE_MOBILE , new String[]{strEmpfaenger}, null);
+		if(cPhone.moveToFirst())
 		{
-			cursor.moveToFirst();
-			int idxDisplayName = cursorContacts.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME);
-			strBeschreibung = cursorContacts.getString(idxDisplayName);
+			int idxName = cPhone.getColumnIndex(Phone.DISPLAY_NAME);
+			strBeschreibung = cPhone.getString(idxName);
 		}
 		
 		//Empfänger anlegen
@@ -222,19 +220,24 @@ public class HandyzahlungErfassen extends Activity{
 	private void HandleContactPicked(Intent data) {
 		if(data == null) return;
 		
-		Cursor c = getContact(data.getData());
-		if (c.moveToFirst())
-		{
-			String strNumber = c.getString(c.getColumnIndexOrThrow(ContactsContract.PhoneLookup.NUMBER));
-			setEmpfaenger(strNumber);
-		}
+		String strNumber = getPhoneNumber(data.getData());
+		setEmpfaenger(strNumber);
 	}
 
-	private Cursor getContact(Uri uri)
+	private String getPhoneNumber(Uri uriContact)
     {
         // Run query
-    	Cursor c =  managedQuery(uri, null, null, null, null);
-    	return c; 
+    	Cursor cContact = managedQuery(uriContact, null, null, null, null);
+    	if(!cContact.moveToFirst()) return "";
+    	int idxId = cContact.getColumnIndex(ContactsContract.Contacts._ID);
+    	String idContact = cContact.getString(idxId);
+    	
+    	Cursor cPhones = managedQuery(Phone.CONTENT_URI, null, Phone.CONTACT_ID + "=" + idContact + " AND " + Phone.TYPE + "=" + Phone.TYPE_MOBILE, null, null);
+    	if(!cPhones.moveToFirst()) return "";
+    	int idxNumber = cPhones.getColumnIndex(Phone.NUMBER);
+    	String strNumber = cPhones.getString(idxNumber);
+    	   	
+    	return strNumber; 
     }
     
     private void setEmpfaengerAutoCompleteAdapter()
