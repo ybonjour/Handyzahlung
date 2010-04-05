@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="app_name">Postfinance Handyzahlung</string>
+        <string name="Empfaenger">Empfänger</string>
+        <string name="Betrag">Betrag</string>
+        <string name="Mitteilung">Mitteilung</string>
+        <string name="ZahlungAusloesen">Zahlung auslösen</string>
+        <string name="ZahlungAbgeschickt">Zahlungsauftrag abgeschickt.</string>
+        <string name="Einstellungen">Einstellungen</string>
+        <string name="EmpfaengerAnzeigen">Empfänger anzeigen</string>
+        <string name="ZahlungenAnzeigen">Zahlungen anzeigen</string>
+        <string name="AlleEmpfaengerLoeschen">Alle Empfänger löschen</string>
+        <string name="Kontakt">Kontakt</string>
+        <string name="NichtAlleAngaben">Es muss ein Empfänger und ein Betrag eingegeben werden.</string>
+        <string name="Uebernehmen">Übernehmen</string>
+        <string name="BeschreibungBearbeiten">Beschreibung bearbeiten</string>
+        <string name="Loeschen">Löschen</string>
+        <string name="FehlerEintragNichtGefunden">Fehler: Der Eintrag konnte nicht gefunden werden.</string>
+        <string name="Beschreibung">Beschreibung</string>
+        <string name="Details">Details</string>
+        <string name="Unbekannt">Unbekannt</string>
+        <string name="Erfolgreich">Erfolgreich</string>
+        <string name="Fehlerhaft">Fehlerhaft</string>
+        <string name="Status">Status</string>
+        <string name="Datum">Datum</string>
+        <string name="AlleZahlungenLoeschen">Alle Zahlungen löschen</string>
+</resources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+<TextView
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/Empfaenger" />
+<LinearLayout 
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+   	android:orientation="horizontal"
+   	android:gravity="top">
+	<AutoCompleteTextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:id="@+id/Empfaenger"
+		android:inputType="phone"
+		android:baselineAligned="false"
+		android:hint="@string/Empfaenger"
+		android:textColor="#000"
+		android:dropDownHeight="fill_parent"
+		android:completionThreshold="1"/>
+	<Button
+		android:drawableTop="@android:drawable/sym_contact_card"
+		android:text="@string/Kontakt"
+		android:id="@+id/Kontakte"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:baselineAligned="false" />
+</LinearLayout>
+<TextView
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/Betrag" />
+<LinearLayout 
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="top">
+	<EditText
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:id="@+id/Betrag"
+		android:contentDescription="@string/Betrag"
+		android:inputType="numberDecimal"
+		android:baselineAligned="false"
+		android:hint="@string/Betrag"/>
+	<Spinner
+		android:id="@+id/Waehrung"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:baselineAligned="false"/>
+</LinearLayout>
+<TextView
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="@string/Mitteilung" />
+<EditText
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:hint="@string/Mitteilung"
+	android:id="@+id/Mitteilung"
+	android:gravity="top"/>
+<Button
+	android:text="@string/ZahlungAusloesen"
+	android:id="@+id/Bezahlen"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content" />
+</LinearLayout>

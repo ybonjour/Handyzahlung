@@ -1,0 +1,17 @@
+<?xml  version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<EditTextPreference
+	android:name="Postfinance Nummer"
+	android:summary="Die Nummer, an welche das SMS zur Handyzahlung gesendet wird."
+	android:defaultValue="474"
+	android:title="Postfinance Nummer"
+	android:key="SMSNumberPostfinance" />
+<CheckBoxPreference
+	android:name="SMS Versenden"
+	android:summary="Gibt an ob die Zahlung tatsälchlich ausgelöst werden soll"
+	android:defaultValue="false"
+	android:title="SMS Versenden"
+	android:summaryOn="SMS wird versendet"
+	android:summaryOff="SMS wird nicht versendet"
+	android:key="SendSMS"/>
+</PreferenceScreen>

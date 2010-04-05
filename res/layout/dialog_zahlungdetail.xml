@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+<TableLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:stretchColumns="0">
+    <TableRow>
+        <TextView
+            android:text="@string/Empfaenger"
+            android:layout_width="wrap_content"/>
+        <TextView
+            android:id="@+id/zahlungDetailEmpfaenger"
+            android:layout_width="wrap_content"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="@string/Betrag"
+            android:layout_width="wrap_content"/>
+        <TextView
+            android:id="@+id/zahlungDetailBetrag"
+            android:layout_width="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="@string/Mitteilung"
+            android:layout_width="wrap_content"/>
+        <TextView
+            android:id="@+id/zahlungDetailMitteilung"
+            android:layout_width="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="@string/Datum"
+            android:layout_width="wrap_content"/>
+        <TextView
+            android:id="@+id/zahlungDetailDatum"
+            android:layout_width="wrap_content"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="@string/Status"
+            android:layout_width="wrap_content"/>
+        <TextView
+            android:id="@+id/zahlungDetailStatus"
+            android:layout_width="wrap_content"/>
+    </TableRow>  
+</TableLayout>
+<TextView
+	android:id="@+id/zahlungDetailStatusText"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"/>
+<Button android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:id="@+id/ZahlungDetailButtonOK"
+    	android:text="@android:string/ok"/>
+</LinearLayout>
