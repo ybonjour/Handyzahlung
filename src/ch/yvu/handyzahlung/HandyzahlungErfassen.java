@@ -1,37 +1,40 @@
 package ch.yvu.handyzahlung;
 
 import java.util.Date;
+
 import ch.yvu.handyzahlung.provider.Handyzahlung.Empfaenger;
 import ch.yvu.handyzahlung.provider.Handyzahlung.Zahlung;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class HandyzahlungErfassen extends Activity{
-	private static final int MENU_EINSTELLUNGEN = 1;
-	private static final int MENU_EMPFAENGERANZEIGEN = 2;
-	private static final int MENU_ZAHLUNGENANZEIGEN = 3;
+	//Optionsmenu Code
+	private static final int MENU_EMPFAENGERANZEIGEN = 1;
 	
 	//Request-Codes
 	private static final int REQUEST_PICKCONTACT = 1;
 	private static final int REQUEST_PICKEMPFAENGER = 2;
+	
+	private static final String SAVEKEY_ZAHLUNGSTATUSVISIBILITY = "ZahlungStatusVisibility";
+	private static final String SAVEKEY_ZAHLUNGSTATUSURI = "ZahlungStatusUri";
 	
 	private Button mBezahlenButton;
 	private Button mKontaktButton;
@@ -39,6 +42,9 @@ public class HandyzahlungErfassen extends Activity{
 	private EditText mBetrag;
 	private EditText mMitteilung;
 	private Spinner mWaehrung;
+	private ListView mStatusListe;
+	
+	private Uri statusUri;	
 		
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,9 +78,7 @@ public class HandyzahlungErfassen extends Activity{
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_EINSTELLUNGEN, 0, R.string.Einstellungen).setIcon(android.R.drawable.ic_menu_preferences);
 		menu.add(0, MENU_EMPFAENGERANZEIGEN, 0, R.string.EmpfaengerAnzeigen);
-		menu.add(0, MENU_ZAHLUNGENANZEIGEN, 0, R.string.ZahlungenAnzeigen);
 		return true;
 	}
     
@@ -82,17 +86,9 @@ public class HandyzahlungErfassen extends Activity{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId())
 		{
-		case MENU_EINSTELLUNGEN:
-			Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
-			startActivity(settingsActivity);
-			return true;
 		case MENU_EMPFAENGERANZEIGEN:
 			Intent empfaengerActivity = new Intent(getBaseContext(), ListeEmpfaenger.class);
 			startActivityForResult(empfaengerActivity, REQUEST_PICKEMPFAENGER);
-			return true;
-		case MENU_ZAHLUNGENANZEIGEN:
-			Intent zahlungActivity = new Intent(getBaseContext(), ListeZahlungen.class);
-			startActivity(zahlungActivity);
 			return true;
 		}
 		return false;
@@ -113,6 +109,35 @@ public class HandyzahlungErfassen extends Activity{
 		}	
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if(this.mStatusListe == null) this.mStatusListe = (ListView) findViewById(R.id.StatusList);
+		int visibility = this.mStatusListe.getVisibility();
+		outState.putInt(SAVEKEY_ZAHLUNGSTATUSVISIBILITY, visibility);
+		
+		if(this.statusUri != null)
+		{
+			outState.putString(SAVEKEY_ZAHLUNGSTATUSURI, this.statusUri.toString());
+		}
+	}
+	
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		if(this.mStatusListe == null) this.mStatusListe = (ListView) findViewById(R.id.StatusList);
+		int visibility = savedInstanceState.getInt(SAVEKEY_ZAHLUNGSTATUSVISIBILITY);
+		this.mStatusListe.setVisibility(visibility);
+		
+		if(savedInstanceState.containsKey(SAVEKEY_ZAHLUNGSTATUSURI))
+		{
+			Uri uri = Uri.parse(savedInstanceState.getString(SAVEKEY_ZAHLUNGSTATUSURI));
+			setStautsListe(uri);
+		}
+	}
+
+	
 	private void sendSMS()
 	{
 		mEmpfaenger = (AutoCompleteTextView) findViewById(R.id.Empfaenger);
@@ -134,28 +159,49 @@ public class HandyzahlungErfassen extends Activity{
 			return;
 		}
 		
-		String strText = "ZAHLE " + strWaehrung +  " " + strBetrag + " AN " + strEmpfaenger + " " + strMitteilung;  
-		
-		//Nummer bestimmen
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		String strNumber = settings.getString("SMSNumberPostfinance", "474");
-				
-		if(settings.getBoolean("SendSMS", false))
-		{
-			//SMS senden
-			SmsManager sm = SmsManager.getDefault();
-			sm.sendTextMessage(strNumber, null, strText, null, null);
-		}
-		
+		//SMS senden
+		SMSSender sender = new SMSSender(getApplicationContext());  
+		sender.sendZahlungSMS(strWaehrung, strBetrag, strEmpfaenger, strMitteilung);
+
 		//Zahlung speichern
-		saveZahlung(strEmpfaenger.toString(), strWaehrung + " " + strBetrag, strMitteilung.toString());
-				
-		//Info Toast anzeigen
-		Toast toast = Toast.makeText(getApplicationContext(), strNumber + ":" + strText, Toast.LENGTH_LONG);
-		toast.show();
+		Uri uriZahlung = saveZahlung(strEmpfaenger.toString(), strWaehrung + " " + strBetrag, strMitteilung.toString());
+		
+		setStautsListe(uriZahlung);
 	}
 	
-	private void saveZahlung(String strEmpfaenger, String strBetrag, String strMitteilung)
+	private void setStautsListe(Uri uriZahlung) {
+		Cursor cursor = managedQuery(uriZahlung, null, null, null, null);
+		ZahlungStatusListAdapter adapter = new ZahlungStatusListAdapter(this, cursor);
+		
+		if(this.mStatusListe == null) this.mStatusListe = (ListView) findViewById(R.id.StatusList);
+		this.mStatusListe.setAdapter(adapter);
+		this.mStatusListe.setVisibility(View.VISIBLE);
+		this.mStatusListe.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				Uri uri = Uri.withAppendedPath(Zahlung.CONTENT_URI, String.valueOf(id));
+				Cursor c = managedQuery(uri, null, null, null, null);
+				if(!c.moveToFirst()) return;
+				int status = c.getInt(c.getColumnIndex(Zahlung.STATUS));
+				
+				if(status != Zahlung.STATUS_ERFOLGREICH)
+				{
+					ZahlungDetailDialog dialog = new ZahlungDetailDialog(HandyzahlungErfassen.this, uri);
+					dialog.show();					
+				}
+				
+				if(status != Zahlung.STATUS_UNBEKANNT)
+				{
+					mStatusListe.setVisibility(View.GONE);
+				}
+			}
+		});
+		//Uri zwischenspeichern für Zustandsspeicherung
+		this.statusUri = uriZahlung;
+	}
+
+	private Uri saveZahlung(String strEmpfaenger, String strBetrag, String strMitteilung)
 	{
 		int empfaengerId = getOrCreateEmpfaenger(strEmpfaenger);
 		
@@ -167,7 +213,7 @@ public class HandyzahlungErfassen extends Activity{
 
 		Date date = new Date();
 		values.put(Zahlung.DATUM, date.getTime());
-		getContentResolver().insert(Zahlung.CONTENT_URI, values);
+		return getContentResolver().insert(Zahlung.CONTENT_URI, values);
 	}
 	
 	private int getOrCreateEmpfaenger(String strEmpfaenger)

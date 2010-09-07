@@ -23,32 +23,32 @@ public class EmpfaengerListAdapter extends CursorAdapter implements Filterable {
 	@Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
     	final LayoutInflater inflater = LayoutInflater.from(context);
-    	final LinearLayout view = (LinearLayout) inflater.inflate(android.R.layout.two_line_list_item, parent, false);
+    	final LinearLayout listItem = (LinearLayout) inflater.inflate(android.R.layout.two_line_list_item, parent, false);
     	
     	//Empfänger setzen
     	int idxEmpfaenger = cursor.getColumnIndex(Empfaenger.EMPFAENGER);
-    	TextView tv1 = ((TextView) view.findViewById(android.R.id.text1));
-    	tv1.setText(cursor.getString(idxEmpfaenger));
+    	TextView view1 = ((TextView) listItem.findViewById(android.R.id.text1));
+    	view1.setText(cursor.getString(idxEmpfaenger));
     	
     	//Beschreibung setzen
     	int idxBeschreibung = cursor.getColumnIndex(Empfaenger.BESCHREIBUNG);
-    	TextView tv2 = ((TextView) view.findViewById(android.R.id.text2));
-    	tv2.setText(cursor.getString(idxBeschreibung));
+    	TextView view2 = ((TextView) listItem.findViewById(android.R.id.text2));
+    	view2.setText(cursor.getString(idxBeschreibung));
     	
-    	return view;
+    	return listItem;
 	}
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		LinearLayout layout = (LinearLayout) view;
+		LinearLayout listItem = (LinearLayout) view;
 		
 		int idxEmpfaenger = cursor.getColumnIndex(Empfaenger.EMPFAENGER);
-		TextView tv1 = (TextView) layout.findViewById(android.R.id.text1);
-		tv1.setText(cursor.getString(idxEmpfaenger));
+		TextView view1 = (TextView) listItem.findViewById(android.R.id.text1);
+		view1.setText(cursor.getString(idxEmpfaenger));
 		
 		int idxBeschreibung = cursor.getColumnIndex(Empfaenger.BESCHREIBUNG);
-		TextView tv2 = (TextView) layout.findViewById(android.R.id.text2);
-		tv2.setText(cursor.getString(idxBeschreibung));
+		TextView view2 = (TextView) listItem.findViewById(android.R.id.text2);
+		view2.setText(cursor.getString(idxBeschreibung));
 	}
 
 	@Override

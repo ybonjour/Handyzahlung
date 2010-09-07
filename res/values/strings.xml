@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <string name="app_name">Postfinance Handyzahlung</string>
+        <string name="app_name">Handyzahlung</string>
+        <string name="ZahlungErfassen">Zahlung erfassen</string>
+        <string name="Saldo">Saldo</string>
+        <string name="Kontobewegungen">Kontobewegungen</string>
         <string name="Empfaenger">Empfänger</string>
         <string name="Betrag">Betrag</string>
         <string name="Mitteilung">Mitteilung</string>
         <string name="ZahlungAusloesen">Zahlung auslösen</string>
-        <string name="ZahlungAbgeschickt">Zahlungsauftrag abgeschickt.</string>
+        <string name="ZahlungAbgeschickt">Zahlungsauftrag abgeschickt</string>
         <string name="Einstellungen">Einstellungen</string>
         <string name="EmpfaengerAnzeigen">Empfänger anzeigen</string>
         <string name="ZahlungenAnzeigen">Zahlungen anzeigen</string>
@@ -24,4 +27,9 @@
         <string name="Status">Status</string>
         <string name="Datum">Datum</string>
         <string name="AlleZahlungenLoeschen">Alle Zahlungen löschen</string>
+        <string name="Zahlung">Zahlung</string>
+        <string name="Bump">Bump</string>
+        <string name="Aktualisieren">Aktualisieren</string>
+        <string name="SaldoWirdAktualisiert">Der Saldo wird aktualisiert.</string>
+        <string name="KontobewegungenWerdenAktualisiert">Die Kontobewegungen werden aktualisiert.</string>
 </resources>

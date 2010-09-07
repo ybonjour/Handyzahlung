@@ -7,11 +7,28 @@
 	android:title="Postfinance Nummer"
 	android:key="SMSNumberPostfinance" />
 <CheckBoxPreference
-	android:name="SMS Versenden"
+	android:name="SMS für Zahlung Versenden"
 	android:summary="Gibt an ob die Zahlung tatsälchlich ausgelöst werden soll"
-	android:defaultValue="false"
+	android:defaultValue="true"
 	android:title="SMS Versenden"
 	android:summaryOn="SMS wird versendet"
 	android:summaryOff="SMS wird nicht versendet"
 	android:key="SendSMS"/>
+<CheckBoxPreference
+	android:name="Saldo automatisch abfragen"
+	android:summary="Gibt an ob der Saldo automatisch bei jedem Aufruf abgefragt werden soll."
+	android:defaultValue="true"
+	android:title="Saldo"
+	android:summaryOn="Saldo wird automatisch abgefragt"
+	android:summaryOff="Saldo wird nicht automatisch abgefragt"
+	android:key="AutoSaldo"/>
+	
+<CheckBoxPreference
+	android:name="Kontobewegungen automatisch abfragen"
+	android:summary="Gibt an ob die Kontobewegungen automatisch bei jedem Aufruf abgefragt werden soll."
+	android:defaultValue="true"
+	android:title="Kontobewegungen"
+	android:summaryOn="Kontobewegungen werden automatisch abgefragt"
+	android:summaryOff="Kontobewegungen werden nicht automatisch abgefragt"
+	android:key="AutoBewegungen"/>
 </PreferenceScreen>

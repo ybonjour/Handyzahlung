@@ -27,8 +27,8 @@ public class ListeZahlungen extends ListActivity {
 		getListView().setTextFilterEnabled(true);
 		
 		registerForContextMenu(getListView());
-	}	
-		
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		
@@ -90,9 +90,7 @@ public class ListeZahlungen extends ListActivity {
 		String[] projection = new String[]{Zahlung._ID, Zahlung.EMPFAENGER, Zahlung.BETRAG, Zahlung.MITTEILUNG, Zahlung.STATUS, Zahlung.DATUM};
 		Cursor cursor = managedQuery(Zahlung.CONTENT_URI, projection, null, null, null);
 			
-		String[] columns = new String[]{Zahlung.EMPFAENGER, Zahlung.BETRAG, Zahlung.DATUM};
-		int[] views = new int[]{R.id.ZahlungEmpfaenger, R.id.ZahlungBetrag, R.id.ZahlungDatum};
-		ZahlungenListAdapter adapter = new ZahlungenListAdapter(this, R.layout.zahlung_item, cursor, columns, views);
+		ZahlungenListAdapter adapter = new ZahlungenListAdapter(this, cursor);
 		setListAdapter(adapter);
 	}
 }
